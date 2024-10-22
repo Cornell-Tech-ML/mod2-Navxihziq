@@ -83,6 +83,12 @@ def render_train_interface(
     st.markdown("### Initial setting")
     st.write(plot())
 
+    def save_log():
+        timestamp = int(time.time())
+        pd.DataFrame(df).to_csv(f"./logs/{timestamp}.csv", index=False)
+
+    st.button("Save Log", on_click=save_log, key="save_log")
+
     if hasattr(train, "train"):
         st.markdown("### Hyperparameters")
         col1, col2 = st.columns(2)
@@ -134,7 +140,7 @@ def render_train_interface(
                 yaxis=dict(range=[0, max(losses)]),
             )
             st_epoch_plot.plotly_chart(fig)
-
+            # save to log file instead
             print(
                 f"Epoch: {epoch}/{max_epochs}, loss: {total_loss}, correct: {correct}"
             )
